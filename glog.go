@@ -3,7 +3,7 @@ package glog
 import (
 	"fmt"
 	//"llhgo/logger/log"
-	"glog/log"
+	"github.com/sqzxcv/glog/log"
 	//"net"
 	"os"
 	"runtime"
