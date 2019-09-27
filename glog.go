@@ -189,7 +189,7 @@ func Debug(v ...interface{}) {
 		if logObj != nil {
 			logObj.lg.Output(4, 2, fmt.Sprintln(v))
 		}
-		//console("debug", v)
+		console("debug", v)
 	}
 }
 
@@ -206,7 +206,7 @@ func Info(v ...interface{}) {
 		if logObj != nil {
 			logObj.lg.Output(3, 2, fmt.Sprintln(v))
 		}
-		//console("info", v)
+		console("info", v)
 	}
 }
 func Infof(format string, v ...interface{}) {
@@ -222,7 +222,7 @@ func Infof(format string, v ...interface{}) {
 		if logObj != nil {
 			logObj.lg.Output(3, 2, fmt.Sprintln(fmt.Sprintf(format, v...)))
 		}
-		//console("info", v)
+		console("info", v)
 	}
 }
 func Warn(v ...interface{}) {
@@ -239,7 +239,7 @@ func Warn(v ...interface{}) {
 		if logObj != nil {
 			logObj.lg.Output(2, 2, fmt.Sprintln(v))
 		}
-		//console("", v)
+		console("", v)
 	}
 }
 
@@ -257,7 +257,7 @@ func Warning(v ...interface{}) {
 		if logObj != nil {
 			logObj.lg.Output(2, 2, fmt.Sprintln(v))
 		}
-		//console("", v)
+		console("", v)
 	}
 }
 
@@ -275,7 +275,7 @@ func Warningf(format string, v ...interface{}) {
 		if logObj != nil {
 			logObj.lg.Output(2, 2, fmt.Sprintln(fmt.Sprintf(format, v...)))
 		}
-		//console("", v)
+		console("", v)
 	}
 }
 
@@ -292,7 +292,7 @@ func Error(v ...interface{}) {
 		if logObj != nil {
 			logObj.lg.Output(1, 2, fmt.Sprintln(v))
 		}
-		//console("", v)
+		console("", v)
 	}
 }
 
@@ -309,7 +309,7 @@ func Errorf(format string, v ...interface{}) {
 		if logObj != nil {
 			logObj.lg.Output(1, 2, fmt.Sprintln(fmt.Sprintf(format, v...)))
 		}
-		//console("", v)
+		console("", v)
 	}
 }
 
@@ -326,7 +326,7 @@ func Fatal(v ...interface{}) {
 		if logObj != nil {
 			logObj.lg.Output(0, 2, fmt.Sprintln(v))
 		}
-		//console(v)
+		console(v)
 	}
 }
 
