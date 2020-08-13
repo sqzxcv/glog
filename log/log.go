@@ -230,6 +230,7 @@ func (l *Logger) formatHeader(level int, buf *[]byte, t time.Time, file string, 
 		itoa(buf, line, -1)
 		*buf = append(*buf, ": "...)
 		*buf = append(*buf, color...)
+		*buf = append(*buf, " "...)
 	}
 }
 
