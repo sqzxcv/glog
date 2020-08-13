@@ -247,32 +247,34 @@ func (l *Logger) formatHeader(level int, buf *[]byte, t time.Time, file string, 
 		t = t.UTC()
 	}
 
+	color := "💜"
 	if !l.Todb {
 		switch level {
 		case 0:
-			tmp := "\033[0;31m"
-			*buf = append(*buf, tmp...)
+			// Fatl
+			color = "❤️"
 		case 1:
-			tmp := "\033[0;35m"
-			*buf = append(*buf, tmp...)
+			// error
+			color = "❤️"
 		case 2:
-			tmp := "\033[0;33m"
-			*buf = append(*buf, tmp...)
+			// warn
+			color = "💛"
 		case 3:
-			tmp := "\033[0;32m"
-			*buf = append(*buf, tmp...)
+			// info
+			color = "💙"
 		case 4:
-			tmp := "\033[0;00m"
-			*buf = append(*buf, tmp...)
+			//debug
+			color = "💚"
 		case 5:
-			tmp := "\033[0;00m"
-			*buf = append(*buf, tmp...)
+			// trace
+			color = "💜"
 		default:
-			tmp := "\033[0;00m"
-			*buf = append(*buf, tmp...)
+			// trace
+			color = "💜"
 		}
 	}
 
+	// 增加时间
 	if l.flag&(Ldate|Ltime|Lmicroseconds) != 0 {
 		if l.flag&Ldate != 0 {
 			year, month, day := t.Date()
@@ -298,6 +300,7 @@ func (l *Logger) formatHeader(level int, buf *[]byte, t time.Time, file string, 
 		}
 	}
 
+	// 增加标志
 	switch level {
 	case 0:
 		tmp := "[FATL] "
@@ -337,6 +340,7 @@ func (l *Logger) formatHeader(level int, buf *[]byte, t time.Time, file string, 
 		*buf = append(*buf, ':')
 		itoa(buf, line, -1)
 		*buf = append(*buf, ": "...)
+		*buf = append(*buf, color...)
 	}
 }
 

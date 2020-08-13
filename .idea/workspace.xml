@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="f9bebbdc-3320-48e1-87e0-0b1f1563f31c" name="默认的" comment="">
+      <change beforePath="$PROJECT_DIR$/log/log.go" beforeDir="false" afterPath="$PROJECT_DIR$/log/log.go" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="GOROOT" path="/usr/local/Cellar/go/1.14.5/libexec" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GoLibraries">
+    <option name="indexEntireGoPath" value="false" />
+  </component>
+  <component name="GradleLocalSettings">
+    <option name="projectSyncType">
+      <map>
+        <entry key="$PROJECT_DIR$/../ShadowsocksRR" value="PREVIEW" />
+        <entry key="$PROJECT_DIR$/../app_ss_auto_shell/mobile_ssr_publish/buildspace/temp/netflymobile/android" value="PREVIEW" />
+        <entry key="$PROJECT_DIR$/../ditch/android" value="PREVIEW" />
+        <entry key="$PROJECT_DIR$/../netfly_client/android" value="PREVIEW" />
+        <entry key="$PROJECT_DIR$/../netfly_client/netfly-android" value="PREVIEW" />
+        <entry key="$PROJECT_DIR$/../netfly_client/share/.android" value="PREVIEW" />
+        <entry key="$PROJECT_DIR$/../netflymobile/android" value="PREVIEW" />
+        <entry key="$PROJECT_DIR$/../shadowsocks-android" value="PREVIEW" />
+        <entry key="$PROJECT_DIR$/../shadowsocks-android2/shadowsocks-android" value="PREVIEW" />
+        <entry key="$USER_HOME$/Downloads/AndroidPing-master" value="PREVIEW" />
+        <entry key="$USER_HOME$/Downloads/GamePlane-master" value="PREVIEW" />
+        <entry key="$USER_HOME$/Downloads/ShadowsocksRR-master" value="PREVIEW" />
+        <entry key="$USER_HOME$/Downloads/flutter-go-master/android" value="PREVIEW" />
+        <entry key="$USER_HOME$/Downloads/flutter_boost-master/android" value="PREVIEW" />
+        <entry key="$USER_HOME$/Downloads/flutter_boost-master/example/android" value="PREVIEW" />
+        <entry key="$USER_HOME$/Downloads/icmp-ping-master" value="PREVIEW" />
+        <entry key="$USER_HOME$/Downloads/native-flutter-master/My Application" value="PREVIEW" />
+        <entry key="$USER_HOME$/Downloads/org.telegram.messenger_13580_.gz" value="PREVIEW" />
+        <entry key="$USER_HOME$/Downloads/shadowsocks-android-java-master" value="PREVIEW" />
+        <entry key="$USER_HOME$/flutter_beta/.pub-cache/hosted/pub.flutter-io.cn/firebase_admob-0.9.0+7/android" value="PREVIEW" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectId" id="1g286X7GXIOdwdWyh5KwfCtmp4R" />
+  <component name="ProjectViewState">
+    <option name="autoscrollToSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="android.project.structure.last.selected" value="SDK Location" />
+    <property name="android.project.structure.proportion" value="0.15" />
+    <property name="android.sdk.path" value="$USER_HOME$/Library/Android/sdk" />
+    <property name="go.import.settings.migrated" value="true" />
+    <property name="go.sdk.automatically.set" value="true" />
+    <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
+    <property name="last_opened_file_path" value="$USER_HOME$" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Dart" />
+  </component>
+  <component name="RunManager">
+    <configuration name="&lt;template&gt;" type="Applet" default="true" selected="false">
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="&lt;template&gt;" type="JUnit" default="true" selected="false">
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+    </configuration>
+    <configuration default="true" type="TestNG">
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="&lt;template&gt;" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" default="true" selected="false">
+      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VgoProject">
+    <integration-enabled>true</integration-enabled>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="-1362" y="82" width="676" height="861" key="find.popup" timestamp="1597306332272">
+      <screen x="-1920" y="23" width="1920" height="1057" />
+    </state>
+    <state x="-1362" y="82" width="676" height="861" key="find.popup/0.23.1920.982/-1920.23.1920.1057@-1920.23.1920.1057" timestamp="1597306332272" />
+  </component>
+</project>
