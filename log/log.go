@@ -18,7 +18,6 @@ import (
 	"fmt"
 	//"inet"
 	"io"
-	"net"
 	"os"
 	"runtime"
 	"sync"
@@ -69,17 +68,8 @@ type Logger struct {
 	//TAG_FATAL []byte
 }
 
-var usock *net.UDPConn
 var Log_svrName = "noname"
 var Log_svrId = "0000"
-var Is_lcenter bool
-
-func NewSock(udpAddr string) {
-	sAddr, _ := net.ResolveUDPAddr("udp", udpAddr)
-	usock, _ = net.DialUDP("udp4", nil, sAddr)
-	// Log_svrName = svrName
-	// Log_svrId = svrId
-}
 
 // New creates a new Logger. The out variable sets the
 // destination to which log data will be written.
@@ -97,7 +87,7 @@ func (l *Logger) SetOutput(w io.Writer) {
 	l.out = w
 }
 
-var std = New(os.Stderr, "", LstdFlags)
+var Std = New(os.Stderr, "", LstdFlags | Lshortfile)
 
 // Cheap integer to fixed-width decimal ASCII.  Give a negative width to avoid zero-padding.
 func itoa(buf *[]byte, i int, wid int) {
@@ -138,107 +128,6 @@ enum LogLevel
         "\033[0;00m2008-11-07 09:35:00 DEBUG "
     };
 */
-
-func (l *Logger) formatHeader0(level int, buf *[]byte, t time.Time, file string, line int) {
-
-	*buf = append(*buf, l.prefix...)
-	if l.flag&LUTC != 0 {
-		t = t.UTC()
-	}
-
-	if !l.Todb {
-		switch level {
-		case 0:
-			tmp := "\033[0;31m"
-			*buf = append(*buf, tmp...)
-		case 1:
-			tmp := "\033[0;35m"
-			*buf = append(*buf, tmp...)
-		case 2:
-			tmp := "\033[0;33m"
-			*buf = append(*buf, tmp...)
-		case 3:
-			tmp := "\033[0;32m"
-			*buf = append(*buf, tmp...)
-		case 4:
-			tmp := "\033[0;00m"
-			*buf = append(*buf, tmp...)
-		case 5:
-			tmp := "\033[0;00m"
-			*buf = append(*buf, tmp...)
-		default:
-			tmp := "\033[0;00m"
-			*buf = append(*buf, tmp...)
-		}
-	}
-
-	if l.flag&(Ldate|Ltime|Lmicroseconds) != 0 {
-		if l.flag&Ldate != 0 {
-			year, month, day := t.Date()
-			itoa(buf, year, 4)
-			*buf = append(*buf, '/')
-			itoa(buf, int(month), 2)
-			*buf = append(*buf, '/')
-			itoa(buf, day, 2)
-			*buf = append(*buf, ' ')
-		}
-		if l.flag&(Ltime|Lmicroseconds) != 0 {
-			hour, min, sec := t.Clock()
-			itoa(buf, hour, 2)
-			*buf = append(*buf, ':')
-			itoa(buf, min, 2)
-			*buf = append(*buf, ':')
-			itoa(buf, sec, 2)
-			if l.flag&Lmicroseconds != 0 {
-				*buf = append(*buf, '.')
-				itoa(buf, t.Nanosecond()/1e3, 6)
-			}
-			*buf = append(*buf, ' ')
-		}
-	}
-
-	switch level {
-	case 0:
-		tmp := "[FATL] "
-		*buf = append(*buf, tmp...)
-	case 1:
-		tmp := "[EROR] "
-		*buf = append(*buf, tmp...)
-	case 2:
-		tmp := "[WARN] "
-		*buf = append(*buf, tmp...)
-	case 3:
-		tmp := "[INFO] "
-		*buf = append(*buf, tmp...)
-	case 4:
-		tmp := "[DEBG] "
-		*buf = append(*buf, tmp...)
-	case 5:
-		tmp := "[TRCE] "
-		*buf = append(*buf, tmp...)
-	default:
-		tmp := "[TRCE] "
-		*buf = append(*buf, tmp...)
-	}
-
-	// 记录中心不记录
-	// if l.flag&(Lshortfile|Llongfile) != 0 {
-	// 	if l.flag&Lshortfile != 0 {
-	// 		short := file
-	// 		for i := len(file) - 1; i > 0; i-- {
-	// 			if file[i] == '/' {
-	// 				short = file[i+1:]
-	// 				break
-	// 			}
-	// 		}
-	// 		file = short
-	// 	}
-	// 	*buf = append(*buf, file...)
-	// 	*buf = append(*buf, ':')
-	// 	itoa(buf, line, -1)
-	// 	*buf = append(*buf, ": "...)
-	// }
-}
 
 func (l *Logger) formatHeader(level int, buf *[]byte, t time.Time, file string, line int) {
 
@@ -368,11 +257,7 @@ func (l *Logger) Output(level int, calldepth int, s string) error {
 		l.mu.Lock()
 	}
 	l.buf = l.buf[:0]
-	if !Is_lcenter {
-		l.formatHeader(level, &l.buf, now, file, line)
-	} else {
-		l.formatHeader0(level, &l.buf, now, file, line)
-	}
+	l.formatHeader(level, &l.buf, now, file, line)
 
 	//fmt.Println(s)
 	s = string(([]byte(s))[1 : len(s)-2])
@@ -389,51 +274,6 @@ func (l *Logger) Output(level int, calldepth int, s string) error {
 
 	_, err := l.out.Write(l.buf)
 
-	//end add by llh
-	if usock != nil && level <= 5 {
-		l.buf = l.buf[:0]
-		switch level {
-		case 0:
-			l.buf = append(l.buf, []byte("FATL")...)
-		case 1:
-			l.buf = append(l.buf, []byte("EROR")...)
-		case 2:
-			l.buf = append(l.buf, []byte("WARN")...)
-		case 3:
-			l.buf = append(l.buf, []byte("INFO")...)
-		case 4:
-			l.buf = append(l.buf, []byte("DEBG")...)
-		}
-
-		//服务名，svrID  加入文件名，行
-		l.buf = append(l.buf, Log_svrName...)
-		l.buf = append(l.buf, ' ')
-		l.buf = append(l.buf, Log_svrId...)
-		l.buf = append(l.buf, ' ')
-
-		// 记录中心不记录
-		if l.flag&(Lshortfile|Llongfile) != 0 {
-			if l.flag&Lshortfile != 0 {
-				short := file
-				for i := len(file) - 1; i > 0; i-- {
-					if file[i] == '/' {
-						short = file[i+1:]
-						break
-					}
-				}
-				file = short
-			}
-			l.buf = append(l.buf, file...)
-			l.buf = append(l.buf, ':')
-			itoa(&l.buf, line, -1)
-			l.buf = append(l.buf, ": "...)
-		}
-
-		l.buf = append(l.buf, s...)
-		usock.Write(l.buf)
-		//usock.Write([]byte(s))
-		//usock.Write(l.buf[30:])
-	}
 	return err
 }
 
@@ -520,29 +360,29 @@ func (l *Logger) SetPrefix(prefix string) {
 
 // SetOutput sets the output destination for the standard logger.
 func SetOutput(w io.Writer) {
-	std.mu.Lock()
-	defer std.mu.Unlock()
-	std.out = w
+	Std.mu.Lock()
+	defer Std.mu.Unlock()
+	Std.out = w
 }
 
 // Flags returns the output flags for the standard logger.
 func Flags() int {
-	return std.Flags()
+	return Std.Flags()
 }
 
 // SetFlags sets the output flags for the standard logger.
 func SetFlags(flag int) {
-	std.SetFlags(flag)
+	Std.SetFlags(flag)
 }
 
 // Prefix returns the output prefix for the standard logger.
 func Prefix() string {
-	return std.Prefix()
+	return Std.Prefix()
 }
 
 // SetPrefix sets the output prefix for the standard logger.
 func SetPrefix(prefix string) {
-	std.SetPrefix(prefix)
+	Std.SetPrefix(prefix)
 }
 
 // These functions write to the standard logger.
@@ -550,57 +390,57 @@ func SetPrefix(prefix string) {
 // Print calls Output to print to the standard logger.
 // Arguments are handled in the manner of fmt.Print.
 func Print(v ...interface{}) {
-	std.Output(4, 2, fmt.Sprint(v...))
+	Std.Output(4, 2, fmt.Sprint(v...))
 }
 
 // Printf calls Output to print to the standard logger.
 // Arguments are handled in the manner of fmt.Printf.
 func Printf(format string, v ...interface{}) {
-	std.Output(4, 2, fmt.Sprintf(format, v...))
+	Std.Output(4, 2, fmt.Sprintf(format, v...))
 }
 
 // Println calls Output to print to the standard logger.
 // Arguments are handled in the manner of fmt.Println.
 func Println(v ...interface{}) {
-	std.Output(4, 2, fmt.Sprintln(v...))
+	Std.Output(4, 2, fmt.Sprintln(v...))
 }
 
 // Fatal is equivalent to Print() followed by a call to os.Exit(1).
 func Fatal(v ...interface{}) {
-	std.Output(4, 2, fmt.Sprint(v...))
+	Std.Output(4, 2, fmt.Sprint(v...))
 	os.Exit(1)
 }
 
 // Fatalf is equivalent to Printf() followed by a call to os.Exit(1).
 func Fatalf(format string, v ...interface{}) {
-	std.Output(4, 2, fmt.Sprintf(format, v...))
+	Std.Output(4, 2, fmt.Sprintf(format, v...))
 	os.Exit(1)
 }
 
 // Fatalln is equivalent to Println() followed by a call to os.Exit(1).
 func Fatalln(v ...interface{}) {
-	std.Output(4, 2, fmt.Sprintln(v...))
+	Std.Output(4, 2, fmt.Sprintln(v...))
 	os.Exit(1)
 }
 
 // Panic is equivalent to Print() followed by a call to panic().
 func Panic(v ...interface{}) {
 	s := fmt.Sprint(v...)
-	std.Output(4, 2, s)
+	Std.Output(4, 2, s)
 	panic(s)
 }
 
 // Panicf is equivalent to Printf() followed by a call to panic().
 func Panicf(format string, v ...interface{}) {
 	s := fmt.Sprintf(format, v...)
-	std.Output(4, 2, s)
+	Std.Output(4, 2, s)
 	panic(s)
 }
 
 // Panicln is equivalent to Println() followed by a call to panic().
 func Panicln(v ...interface{}) {
 	s := fmt.Sprintln(v...)
-	std.Output(4, 2, s)
+	Std.Output(4, 2, s)
 	panic(s)
 }
 
@@ -612,5 +452,5 @@ func Panicln(v ...interface{}) {
 // if Llongfile or Lshortfile is set; a value of 1 will print the details
 // for the caller of Output.
 func Output(calldepth int, s string) error {
-	return std.Output(4, calldepth+1, s) // +1 for this frame.
+	return Std.Output(4, calldepth+1, s) // +1 for this frame.
 }

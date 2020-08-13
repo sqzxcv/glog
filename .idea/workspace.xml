@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f9bebbdc-3320-48e1-87e0-0b1f1563f31c" name="默认的" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/glog.go" beforeDir="false" afterPath="$PROJECT_DIR$/glog.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/log/log.go" beforeDir="false" afterPath="$PROJECT_DIR$/log/log.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -104,9 +106,9 @@
     <integration-enabled>true</integration-enabled>
   </component>
   <component name="WindowStateProjectService">
-    <state x="-1362" y="82" width="676" height="861" key="find.popup" timestamp="1597306332272">
+    <state x="-1362" y="82" width="676" height="861" key="find.popup" timestamp="1597308838511">
       <screen x="-1920" y="23" width="1920" height="1057" />
     </state>
-    <state x="-1362" y="82" width="676" height="861" key="find.popup/0.23.1920.982/-1920.23.1920.1057@-1920.23.1920.1057" timestamp="1597306332272" />
+    <state x="-1362" y="82" width="676" height="861" key="find.popup/0.23.1920.982/-1920.23.1920.1057@-1920.23.1920.1057" timestamp="1597308838511" />
   </component>
 </project>

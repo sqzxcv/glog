@@ -6,7 +6,6 @@ import (
 	"github.com/sqzxcv/glog/log"
 	//"net"
 	"os"
-	"runtime"
 	"strconv"
 	"sync"
 	"time"
@@ -67,21 +66,9 @@ func SetConsole(isConsole bool) {
 	consoleAppender = isConsole
 }
 
-//原始启动
-func SetLevel0(_level LEVEL) {
-	logLevel = _level
-	log.Is_lcenter = true
-	//log.NewSock("127.0.0.1:7777")
-}
-
 func SetLevel(_level LEVEL) {
 	logLevel = _level
 	//log.NewSock("127.0.0.1:7777")
-}
-
-func SetLevelNet(_level LEVEL, updAddr string) {
-	logLevel = _level
-	log.NewSock(updAddr)
 }
 
 func SetSvrId(svrName string, svrId string) {
@@ -154,18 +141,9 @@ func mkdirlog(dir string) (e error) {
 	}
 	return
 }
-func console(s ...interface{}) {
+func console(level int, calldepth int, s ...interface{}) {
 	if consoleAppender {
-		_, file, line, _ := runtime.Caller(2)
-		short := file
-		for i := len(file) - 1; i > 0; i-- {
-			if file[i] == '/' {
-				short = file[i+1:]
-				break
-			}
-		}
-		file = short
-		log.Println(file, strconv.Itoa(line), s)
+		log.Std.Output(level, calldepth, fmt.Sprintln(s))
 	}
 }
 func catchError() {
@@ -189,7 +167,7 @@ func Debug(v ...interface{}) {
 		if logObj != nil {
 			logObj.lg.Output(4, 2, fmt.Sprintln(v))
 		}
-		console("debug", v)
+		console(4, 2, v)
 	}
 }
 
@@ -206,23 +184,7 @@ func Info(v ...interface{}) {
 		if logObj != nil {
 			logObj.lg.Output(3, 2, fmt.Sprintln(v))
 		}
-		console("info", v)
-	}
-}
-func Infof(format string, v ...interface{}) {
-	if dailyRolling {
-		fileCheck()
-	}
-	defer catchError()
-	if logObj != nil {
-		logObj.mu.RLock()
-		defer logObj.mu.RUnlock()
-	}
-	if logLevel <= INFO {
-		if logObj != nil {
-			logObj.lg.Output(3, 2, fmt.Sprintln(fmt.Sprintf(format, v...)))
-		}
-		console("info", v)
+		console(3, 2, v)
 	}
 }
 func Warn(v ...interface{}) {
@@ -239,43 +201,7 @@ func Warn(v ...interface{}) {
 		if logObj != nil {
 			logObj.lg.Output(2, 2, fmt.Sprintln(v))
 		}
-		console("", v)
-	}
-}
-
-func Warning(v ...interface{}) {
-	if dailyRolling {
-		fileCheck()
-	}
-	defer catchError()
-	if logObj != nil {
-		logObj.mu.RLock()
-		defer logObj.mu.RUnlock()
-	}
-
-	if logLevel <= WARN {
-		if logObj != nil {
-			logObj.lg.Output(2, 2, fmt.Sprintln(v))
-		}
-		console("", v)
-	}
-}
-
-func Warningf(format string, v ...interface{}) {
-	if dailyRolling {
-		fileCheck()
-	}
-	defer catchError()
-	if logObj != nil {
-		logObj.mu.RLock()
-		defer logObj.mu.RUnlock()
-	}
-
-	if logLevel <= WARN {
-		if logObj != nil {
-			logObj.lg.Output(2, 2, fmt.Sprintln(fmt.Sprintf(format, v...)))
-		}
-		console("", v)
+		console(2, 2, v)
 	}
 }
 
@@ -292,24 +218,7 @@ func Error(v ...interface{}) {
 		if logObj != nil {
 			logObj.lg.Output(1, 2, fmt.Sprintln(v))
 		}
-		console("", v)
-	}
-}
-
-func Errorf(format string, v ...interface{}) {
-	if dailyRolling {
-		fileCheck()
-	}
-	defer catchError()
-	if logObj != nil {
-		logObj.mu.RLock()
-		defer logObj.mu.RUnlock()
-	}
-	if logLevel <= ERROR {
-		if logObj != nil {
-			logObj.lg.Output(1, 2, fmt.Sprintln(fmt.Sprintf(format, v...)))
-		}
-		console("", v)
+		console(1, 2, v)
 	}
 }
 
@@ -326,7 +235,7 @@ func Fatal(v ...interface{}) {
 		if logObj != nil {
 			logObj.lg.Output(0, 2, fmt.Sprintln(v))
 		}
-		console(v)
+		console(0, 2, v)
 	}
 }
 
