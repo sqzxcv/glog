@@ -167,7 +167,7 @@ func Debug(v ...interface{}) {
 		if logObj != nil {
 			logObj.lg.Output(4, 2, fmt.Sprintln(v))
 		}
-		console(4, 2, v)
+		console(4, 3, v)
 	}
 }
 
@@ -184,7 +184,7 @@ func Info(v ...interface{}) {
 		if logObj != nil {
 			logObj.lg.Output(3, 2, fmt.Sprintln(v))
 		}
-		console(3, 2, v)
+		console(3, 3, v)
 	}
 }
 func Warn(v ...interface{}) {
@@ -201,7 +201,7 @@ func Warn(v ...interface{}) {
 		if logObj != nil {
 			logObj.lg.Output(2, 2, fmt.Sprintln(v))
 		}
-		console(2, 2, v)
+		console(2, 3, v)
 	}
 }
 
@@ -218,7 +218,7 @@ func Error(v ...interface{}) {
 		if logObj != nil {
 			logObj.lg.Output(1, 2, fmt.Sprintln(v))
 		}
-		console(1, 2, v)
+		console(1, 3, v)
 	}
 }
 
@@ -235,7 +235,7 @@ func Fatal(v ...interface{}) {
 		if logObj != nil {
 			logObj.lg.Output(0, 2, fmt.Sprintln(v))
 		}
-		console(0, 2, v)
+		console(0, 3, v)
 	}
 }
 
