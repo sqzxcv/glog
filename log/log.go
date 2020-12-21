@@ -141,10 +141,10 @@ func (l *Logger) formatHeader(level int, buf *[]byte, t time.Time, file string, 
 		switch level {
 		case 0:
 			// Fatl
-			color = "❤️️"
+			color = "💔"
 		case 1:
 			// error
-			color = "❤️️"
+			color = "️💔"
 		case 2:
 			// warn
 			color = "💛"
