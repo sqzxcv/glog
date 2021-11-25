@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="f9bebbdc-3320-48e1-87e0-0b1f1563f31c" name="默认的" comment="">
-      <change afterPath="$PROJECT_DIR$/cmd/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/glog.go" beforeDir="false" afterPath="$PROJECT_DIR$/glog.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,7 +20,7 @@
       </list>
     </option>
   </component>
-  <component name="GOROOT" path="/usr/local/Cellar/go/1.14.5/libexec" />
+  <component name="GOROOT" url="file:///usr/local/opt/go/libexec" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -64,7 +67,9 @@
     <property name="android.project.structure.last.selected" value="SDK Location" />
     <property name="android.project.structure.proportion" value="0.15" />
     <property name="android.sdk.path" value="$USER_HOME$/Library/Android/sdk" />
+    <property name="go.formatter.settings.were.checked" value="true" />
     <property name="go.import.settings.migrated" value="true" />
+    <property name="go.modules.go.list.on.any.changes.was.set" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
     <property name="last_opened_file_path" value="$USER_HOME$" />
@@ -109,9 +114,9 @@
       <working_directory value="$PROJECT_DIR$" />
       <go_parameters value="-i" />
       <kind value="PACKAGE" />
-      <filePath value="$PROJECT_DIR$" />
       <package value="github.com/sqzxcv/glog/cmd" />
       <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
       <method v="2" />
     </configuration>
   </component>
@@ -121,27 +126,5 @@
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="420" y="170" width="1079" height="719" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1608565166613">
-      <screen x="0" y="23" width="1920" height="984" />
-    </state>
-    <state x="420" y="170" width="1079" height="719" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1920.984/1920.23.1920.1057@0.23.1920.984" timestamp="1608565166613" />
-    <state width="1868" height="314" key="GridCell.Tab.0.bottom" timestamp="1608565168982">
-      <screen x="0" y="23" width="1920" height="984" />
-    </state>
-    <state width="1868" height="314" key="GridCell.Tab.0.bottom/0.23.1920.984/1920.23.1920.1057@0.23.1920.984" timestamp="1608565168982" />
-    <state width="1868" height="314" key="GridCell.Tab.0.center" timestamp="1608565168982">
-      <screen x="0" y="23" width="1920" height="984" />
-    </state>
-    <state width="1868" height="314" key="GridCell.Tab.0.center/0.23.1920.984/1920.23.1920.1057@0.23.1920.984" timestamp="1608565168982" />
-    <state width="1868" height="314" key="GridCell.Tab.0.left" timestamp="1608565168981">
-      <screen x="0" y="23" width="1920" height="984" />
-    </state>
-    <state width="1868" height="314" key="GridCell.Tab.0.left/0.23.1920.984/1920.23.1920.1057@0.23.1920.984" timestamp="1608565168981" />
-    <state width="1868" height="314" key="GridCell.Tab.0.right" timestamp="1608565168982">
-      <screen x="0" y="23" width="1920" height="984" />
-    </state>
-    <state width="1868" height="314" key="GridCell.Tab.0.right/0.23.1920.984/1920.23.1920.1057@0.23.1920.984" timestamp="1608565168982" />
   </component>
 </project>
