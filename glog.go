@@ -292,7 +292,7 @@ func WarnF(format string, v ...interface{}) {
     }
 }
 
-func ErrorF(format string, v ...any) {
+func ErrorF(format string, v ...interface{}) {
     if dailyRolling {
         fileCheck()
     }
