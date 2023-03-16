@@ -252,9 +252,9 @@ func DebugF(format string, v ...interface{}) {
 
     if logLevel <= DEBUG {
         if logObj != nil {
-            logObj.lg.Output(4, 2, fmt.Sprintf(format, v))
+            logObj.lg.Output(4, 2, fmt.Sprintf(format, v...))
         }
-        console(4, 3, fmt.Sprintf(format, v))
+        console(4, 3, fmt.Sprintf(format, v...))
     }
 }
 
@@ -269,9 +269,9 @@ func InfoF(format string, v ...interface{}) {
     }
     if logLevel <= INFO {
         if logObj != nil {
-            logObj.lg.Output(3, 2, fmt.Sprintf(format, v))
+            logObj.lg.Output(3, 2, fmt.Sprintf(format, v...))
         }
-        console(3, 3, fmt.Sprintf(format, v))
+        console(3, 3, fmt.Sprintf(format, v...))
     }
 }
 func WarnF(format string, v ...interface{}) {
@@ -286,9 +286,9 @@ func WarnF(format string, v ...interface{}) {
 
     if logLevel <= WARN {
         if logObj != nil {
-            logObj.lg.Output(2, 2, fmt.Sprintf(format, v))
+            logObj.lg.Output(2, 2, fmt.Sprintf(format, v...))
         }
-        console(2, 3, fmt.Sprintf(format, v))
+        console(2, 3, fmt.Sprintf(format, v...))
     }
 }
 
@@ -303,9 +303,9 @@ func ErrorF(format string, v ...interface{}) {
     }
     if logLevel <= ERROR {
         if logObj != nil {
-            logObj.lg.Output(1, 2, fmt.Sprintf(format, v))
+            logObj.lg.Output(1, 2, fmt.Sprintf(format, v...))
         }
-        console(1, 3, fmt.Sprintf(format, v))
+        console(1, 3, fmt.Sprintf(format, v...))
     }
 }
 
@@ -320,9 +320,9 @@ func FatalF(format string, v ...interface{}) {
     }
     if logLevel <= FATAL {
         if logObj != nil {
-            logObj.lg.Output(0, 2, fmt.Sprintf(format, v))
+            logObj.lg.Output(0, 2, fmt.Sprintf(format, v...))
         }
-        console(0, 3, fmt.Sprintf(format, v))
+        console(0, 3, fmt.Sprintf(format, v...))
     }
 }
 
