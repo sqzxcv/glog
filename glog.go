@@ -143,7 +143,7 @@ func mkdirlog(dir string) (e error) {
 }
 func console(level int, calldepth int, s ...interface{}) {
     if consoleAppender {
-        log.Std.Output(level, calldepth, fmt.Sprintln(s))
+        log.Std.Output(level, calldepth, fmt.Sprintln(s...))
     }
 }
 func catchError() {
@@ -165,9 +165,9 @@ func Debug(v ...interface{}) {
 
     if logLevel <= DEBUG {
         if logObj != nil {
-            logObj.lg.Output(4, 2, fmt.Sprintln(v))
+            logObj.lg.Output(4, 2, fmt.Sprintln(v...))
         }
-        console(4, 3, v)
+        console(4, 3, v...)
     }
 }
 
@@ -182,9 +182,9 @@ func Info(v ...interface{}) {
     }
     if logLevel <= INFO {
         if logObj != nil {
-            logObj.lg.Output(3, 2, fmt.Sprintln(v))
+            logObj.lg.Output(3, 2, fmt.Sprintln(v...))
         }
-        console(3, 3, v)
+        console(3, 3, v...)
     }
 }
 func Warn(v ...interface{}) {
@@ -199,9 +199,9 @@ func Warn(v ...interface{}) {
 
     if logLevel <= WARN {
         if logObj != nil {
-            logObj.lg.Output(2, 2, fmt.Sprintln(v))
+            logObj.lg.Output(2, 2, fmt.Sprintln(v...))
         }
-        console(2, 3, v)
+        console(2, 3, v...)
     }
 }
 
@@ -216,9 +216,9 @@ func Error(v ...interface{}) {
     }
     if logLevel <= ERROR {
         if logObj != nil {
-            logObj.lg.Output(1, 2, fmt.Sprintln(v))
+            logObj.lg.Output(1, 2, fmt.Sprintln(v...))
         }
-        console(1, 3, v)
+        console(1, 3, v...)
     }
 }
 
@@ -233,9 +233,9 @@ func Fatal(v ...interface{}) {
     }
     if logLevel <= FATAL {
         if logObj != nil {
-            logObj.lg.Output(0, 2, fmt.Sprintln(v))
+            logObj.lg.Output(0, 2, fmt.Sprintln(v...))
         }
-        console(0, 3, v)
+        console(0, 3, v...)
     }
 }
 
