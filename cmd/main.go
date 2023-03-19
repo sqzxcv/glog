@@ -15,6 +15,6 @@ func main() {
     dd := fmt.Sprintf("test22:%s", "aa")
 
     glog.Error("日志目录:", dd)
-    glog.ErrorF("1ddd3etest:%d", 23)
+    glog.FError("1ddd3etest:%d", 23)
     glog.Debug("test", 232, "aaa")
 }

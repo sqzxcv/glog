@@ -239,7 +239,7 @@ func Fatal(v ...interface{}) {
     }
 }
 
-func DebugF(format string, v ...interface{}) {
+func FDebug(format string, v ...interface{}) {
 
     if dailyRolling {
         fileCheck()
@@ -258,7 +258,7 @@ func DebugF(format string, v ...interface{}) {
     }
 }
 
-func InfoF(format string, v ...interface{}) {
+func FInfo(format string, v ...interface{}) {
     if dailyRolling {
         fileCheck()
     }
@@ -274,7 +274,7 @@ func InfoF(format string, v ...interface{}) {
         console(3, 3, fmt.Sprintf(format, v...))
     }
 }
-func WarnF(format string, v ...interface{}) {
+func FWarn(format string, v ...interface{}) {
     if dailyRolling {
         fileCheck()
     }
@@ -292,7 +292,7 @@ func WarnF(format string, v ...interface{}) {
     }
 }
 
-func ErrorF(format string, v ...interface{}) {
+func FError(format string, v ...interface{}) {
     if dailyRolling {
         fileCheck()
     }
@@ -309,7 +309,7 @@ func ErrorF(format string, v ...interface{}) {
     }
 }
 
-func FatalF(format string, v ...interface{}) {
+func FFatal(format string, v ...interface{}) {
     if dailyRolling {
         fileCheck()
     }
