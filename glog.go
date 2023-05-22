@@ -17,6 +17,7 @@ const (
 
 type LEVEL int32
 
+//LogLevel 日志等级
 var LogLevel LEVEL = 1
 var maxFileSize int64
 var maxFileCount int32
