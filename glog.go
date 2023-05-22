@@ -17,7 +17,7 @@ const (
 
 type LEVEL int32
 
-var logLevel LEVEL = 1
+var LogLevel LEVEL = 1
 var maxFileSize int64
 var maxFileCount int32
 var dailyRolling bool = true
@@ -67,26 +67,26 @@ func SetConsole(isConsole bool) {
 }
 
 func SetLevel(_level LEVEL) {
-    logLevel = _level
+    LogLevel = _level
     //log.NewSock("127.0.0.1:7777")
 }
 
 func SetLevelWithName(_level string) {
     switch _level {
     case "all":
-        logLevel = ALL
+        LogLevel = ALL
     case "debug":
-        logLevel = DEBUG
+        LogLevel = DEBUG
     case "info":
-        logLevel = INFO
+        LogLevel = INFO
     case "warn":
-        logLevel = WARN
+        LogLevel = WARN
     case "error":
-        logLevel = ERROR
+        LogLevel = ERROR
     case "fatal":
-        logLevel = FATAL
+        LogLevel = FATAL
     case "off":
-        logLevel = OFF
+        LogLevel = OFF
     }
 
     //log.NewSock("127.0.0.1:7777")
@@ -184,7 +184,7 @@ func Debug(v ...interface{}) {
         defer logObj.mu.RUnlock()
     }
 
-    if logLevel <= DEBUG {
+    if LogLevel <= DEBUG {
         if logObj != nil {
             logObj.lg.Output(4, 2, fmt.Sprintln(v...))
         }
@@ -201,7 +201,7 @@ func Info(v ...interface{}) {
         logObj.mu.RLock()
         defer logObj.mu.RUnlock()
     }
-    if logLevel <= INFO {
+    if LogLevel <= INFO {
         if logObj != nil {
             logObj.lg.Output(3, 2, fmt.Sprintln(v...))
         }
@@ -218,7 +218,7 @@ func Warn(v ...interface{}) {
         defer logObj.mu.RUnlock()
     }
 
-    if logLevel <= WARN {
+    if LogLevel <= WARN {
         if logObj != nil {
             logObj.lg.Output(2, 2, fmt.Sprintln(v...))
         }
@@ -235,7 +235,7 @@ func Error(v ...interface{}) {
         logObj.mu.RLock()
         defer logObj.mu.RUnlock()
     }
-    if logLevel <= ERROR {
+    if LogLevel <= ERROR {
         if logObj != nil {
             logObj.lg.Output(1, 2, fmt.Sprintln(v...))
         }
@@ -252,7 +252,7 @@ func Fatal(v ...interface{}) {
         logObj.mu.RLock()
         defer logObj.mu.RUnlock()
     }
-    if logLevel <= FATAL {
+    if LogLevel <= FATAL {
         if logObj != nil {
             logObj.lg.Output(0, 2, fmt.Sprintln(v...))
         }
@@ -271,7 +271,7 @@ func FDebug(format string, v ...interface{}) {
         defer logObj.mu.RUnlock()
     }
 
-    if logLevel <= DEBUG {
+    if LogLevel <= DEBUG {
         if logObj != nil {
             logObj.lg.Output(4, 2, fmt.Sprintf(format, v...))
         }
@@ -288,7 +288,7 @@ func FInfo(format string, v ...interface{}) {
         logObj.mu.RLock()
         defer logObj.mu.RUnlock()
     }
-    if logLevel <= INFO {
+    if LogLevel <= INFO {
         if logObj != nil {
             logObj.lg.Output(3, 2, fmt.Sprintf(format, v...))
         }
@@ -305,7 +305,7 @@ func FWarn(format string, v ...interface{}) {
         defer logObj.mu.RUnlock()
     }
 
-    if logLevel <= WARN {
+    if LogLevel <= WARN {
         if logObj != nil {
             logObj.lg.Output(2, 2, fmt.Sprintf(format, v...))
         }
@@ -322,7 +322,7 @@ func FError(format string, v ...interface{}) {
         logObj.mu.RLock()
         defer logObj.mu.RUnlock()
     }
-    if logLevel <= ERROR {
+    if LogLevel <= ERROR {
         if logObj != nil {
             logObj.lg.Output(1, 2, fmt.Sprintf(format, v...))
         }
@@ -339,7 +339,7 @@ func FFatal(format string, v ...interface{}) {
         logObj.mu.RLock()
         defer logObj.mu.RUnlock()
     }
-    if logLevel <= FATAL {
+    if LogLevel <= FATAL {
         if logObj != nil {
             logObj.lg.Output(0, 2, fmt.Sprintf(format, v...))
         }
