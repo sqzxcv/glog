@@ -71,6 +71,27 @@ func SetLevel(_level LEVEL) {
     //log.NewSock("127.0.0.1:7777")
 }
 
+func SetLevelWithName(_level string) {
+    switch _level {
+    case "all":
+        logLevel = ALL
+    case "debug":
+        logLevel = DEBUG
+    case "info":
+        logLevel = INFO
+    case "warn":
+        logLevel = WARN
+    case "error":
+        logLevel = ERROR
+    case "fatal":
+        logLevel = FATAL
+    case "off":
+        logLevel = OFF
+    }
+
+    //log.NewSock("127.0.0.1:7777")
+}
+
 func SetSvrId(svrName string, svrId string) {
     log.Log_svrName = svrName
     log.Log_svrId = svrId

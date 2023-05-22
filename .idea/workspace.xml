@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f9bebbdc-3320-48e1-87e0-0b1f1563f31c" name="默认的" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/glog.go" beforeDir="false" afterPath="$PROJECT_DIR$/glog.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -144,7 +143,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/glog.go</url>
-          <line>182</line>
+          <line>203</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
