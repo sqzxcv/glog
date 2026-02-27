@@ -143,7 +143,7 @@ func SetRolling(fileDir, fileName string, todb bool, maxNumber int32, maxSize in
 
 	nums, err := getOneDayLogFileNum(fileDir, fileName, t.Format(DATEFORMAT))
 	if err != nil {
-		logObj.lg.Println("getOneDayLogFileNum err", err.Error())
+		fmt.Println("getOneDayLogFileNum err", err.Error())
 		os.Exit(1)
 	}
 	maxNum := 0
@@ -392,7 +392,7 @@ func (f *_FILE) isNewDate() bool {
 }
 
 func (f *_FILE) isCurrentLogFileTooBig() bool {
-	if maxFileCount > 1 {
+	if maxFileSize > 0 {
 		if fileSize(f.dir+"/"+f.filename) >= maxFileSize {
 			return true
 		}
@@ -402,25 +402,28 @@ func (f *_FILE) isCurrentLogFileTooBig() bool {
 
 func (f *_FILE) rename() {
 	if f.isNewDate() {
-
-		// 如果存在符合 filename.date.num 格式的文件，则不进行重命名
-		if hasPrefixFile(f.dir, f.filename, f._date.Format(DATEFORMAT)) == false {
-			if f.logfile != nil {
-				f.logfile.Close()
-			}
-			fn := fmt.Sprintf("%s/%s.%s.%d", f.dir, f.filename, f._date.Format(DATEFORMAT), 1)
-			f._suffix = 1
-			err := os.Rename(f.dir+"/"+f.filename, fn)
-			if err != nil {
-				f.lg.Println("rename err", err.Error())
-			}
-			t, _ := time.Parse(DATEFORMAT, time.Now().Format(DATEFORMAT))
-			f._date = &t
-			f.logfile, _ = os.Create(f.dir + "/" + f.filename)
-			//f.lg = log.New(logObj.logfile, "\n", log.Ldate|log.Ltime|log.Lshortfile)
-			f.lg = log.New(logObj.logfile, "", log.Ldate|log.Ltime|log.Lshortfile)
-			return
+		if f.logfile != nil {
+			f.logfile.Close()
 		}
+		// 找到旧日期已有的最大 suffix，用 max+1 重命名当前文件
+		nums, _ := getOneDayLogFileNum(f.dir, f.filename, f._date.Format(DATEFORMAT))
+		maxNum := 0
+		for _, num := range nums {
+			if num > maxNum {
+				maxNum = num
+			}
+		}
+		fn := fmt.Sprintf("%s/%s.%s.%d", f.dir, f.filename, f._date.Format(DATEFORMAT), maxNum+1)
+		err := os.Rename(f.dir+"/"+f.filename, fn)
+		if err != nil {
+			fmt.Println("rename err", err.Error())
+		}
+		t, _ := time.Parse(DATEFORMAT, time.Now().Format(DATEFORMAT))
+		f._date = &t
+		f._suffix = 0 // 新的一天，重置 suffix
+		f.logfile, _ = os.Create(f.dir + "/" + f.filename)
+		f.lg = log.New(logObj.logfile, "", log.Ldate|log.Ltime|log.Lshortfile)
+		return
 	}
 	if f.isCurrentLogFileTooBig() {
 		num, err := getOneDayLogFileNum(f.dir, f.filename, f._date.Format(DATEFORMAT))
@@ -538,31 +541,6 @@ func getOneDayLogFileNum(dir, filename, date string) ([]int, error) {
 	return nums, nil
 }
 
-// hasPrefixFile 检查指定目录下是否存在符合 filename.date.num 格式的文件
-func hasPrefixFile(dir, filename, date string) bool {
-	// 构造正则表达式以匹配 filename.date.num 格式的文件
-	regexPattern := fmt.Sprintf(`^%s\.%s\.\d+$`, regexp.QuoteMeta(filename), date)
-	regex := regexp.MustCompile(regexPattern)
-
-	// 读取目录下的所有文件
-	files, err := os.ReadDir(dir)
-	if err != nil {
-		return false
-	}
-
-	// 遍历目录下的文件，检查是否有匹配的文件名
-	for _, file := range files {
-		if !file.IsDir() {
-			// 获取文件名
-			baseName := filepath.Base(file.Name())
-			// 检查文件名是否符合正则表达式
-			if regex.MatchString(baseName) {
-				return true
-			}
-		}
-	}
-	return false
-}
 
 // removeMoreOldLogFile 删除 dir 下以 filename 开头的文件，保留最新的 fileCount 个文件
 func removeMoreOldLogFile(dir, filename string, fileCount int) {
