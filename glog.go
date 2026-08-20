@@ -32,6 +32,9 @@ var RollingFile bool = false
 var logObj *_FILE
 var todb bool = false
 
+// monitorOnce 保证滚动文件的后台巡检 goroutine 只启动一次
+var monitorOnce sync.Once
+
 //var usock *net.UDPConn
 
 const DATEFORMAT = "2006-01-02"
@@ -162,7 +165,9 @@ func SetRolling(fileDir, fileName string, todb bool, maxNumber int32, maxSize in
 		logObj.rename()
 	}
 	logObj.lg.Todb = todb
-	go fileMonitor()
+	// 只启动一次: 每次调用都起一个新的 fileMonitor 会泄漏 goroutine,
+	// 新起的那个还会和已有的一起读写同一批全局变量。
+	monitorOnce.Do(func() { go fileMonitor() })
 }
 
 //func SetLogFile(fileDir string, fileName string, todb bool) {
