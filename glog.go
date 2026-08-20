@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"path/filepath"
 	"regexp"
+	"runtime"
 	"sort"
 
 	//"llhgo/logger/log"
@@ -30,6 +31,9 @@ var consoleAppender bool = true
 var RollingFile bool = false
 var logObj *_FILE
 var todb bool = false
+
+// monitorOnce 保证滚动文件的后台巡检 goroutine 只启动一次
+var monitorOnce sync.Once
 
 //var usock *net.UDPConn
 
@@ -161,7 +165,9 @@ func SetRolling(fileDir, fileName string, todb bool, maxNumber int32, maxSize in
 		logObj.rename()
 	}
 	logObj.lg.Todb = todb
-	go fileMonitor()
+	// 只启动一次: 每次调用都起一个新的 fileMonitor 会泄漏 goroutine,
+	// 新起的那个还会和已有的一起读写同一批全局变量。
+	monitorOnce.Do(func() { go fileMonitor() })
 }
 
 //func SetLogFile(fileDir string, fileName string, todb bool) {
@@ -185,10 +191,57 @@ func mkdirlog(dir string) (e error) {
 	}
 	return
 }
-func console(level int, calldepth int, s ...interface{}) {
-	if consoleAppender {
-		log.Std.Output(level, calldepth, fmt.Sprintln(s...))
+
+// logLevelOf 把 glog 的 LEVEL 映射成 log 子包使用的级别序号。
+// log 子包的序号是: 0 致命, 1 错误, 2 警告, 3 信息, 4 调试, 5 追踪。
+func logLevelOf(l LEVEL) int {
+	switch l {
+	case FATAL:
+		return 0
+	case ERROR:
+		return 1
+	case WARN:
+		return 2
+	case INFO:
+		return 3
+	case DEBUG:
+		return 4
+	default:
+		return 5
 	}
+}
+
+// OutputAt 按指定级别输出一条已格式化的日志, 调用位置由参数给出而非现场推导。
+// 供上层日志门面(如 alog)复用本包的控制台与滚动文件能力:
+// 门面自己算一次 fmt.Sprintln 与 runtime.Caller, 本地与远程共用, 不必重复计算。
+// file 传完整路径, Lshortfile 的截短由 log 子包处理。
+func OutputAt(level LEVEL, file string, line int, s string) {
+	defer catchError()
+	if logObj != nil {
+		logObj.mu.RLock()
+		defer logObj.mu.RUnlock()
+	}
+	if LogLevel > level {
+		return
+	}
+	lv := logLevelOf(level)
+	if logObj != nil {
+		logObj.lg.OutputAt(lv, file, line, s)
+	}
+	if consoleAppender {
+		log.Std.OutputAt(lv, file, line, s)
+	}
+}
+
+// outputHere 取调用栈上第 skip 层的位置后交给 OutputAt。
+// skip 从 outputHere 自身算起: 1 是它的调用者。
+func outputHere(level LEVEL, skip int, s string) {
+	_, file, line, ok := runtime.Caller(skip + 1)
+	if !ok {
+		file = "???"
+		line = 0
+	}
+	OutputAt(level, file, line, s)
 }
 func catchError() {
 	if err := recover(); err != nil {
@@ -196,179 +249,27 @@ func catchError() {
 	}
 }
 
-func Debug(v ...interface{}) {
+func Debug(v ...interface{}) { outputHere(DEBUG, 1, fmt.Sprintln(v...)) }
 
-	//if dailyRolling {
-	//	fileCheck()
-	//}
-	defer catchError()
-	if logObj != nil {
-		logObj.mu.RLock()
-		defer logObj.mu.RUnlock()
-	}
+func Info(v ...interface{}) { outputHere(INFO, 1, fmt.Sprintln(v...)) }
 
-	if LogLevel <= DEBUG {
-		if logObj != nil {
-			logObj.lg.Output(4, 2, fmt.Sprintln(v...))
-		}
-		console(4, 3, v...)
-	}
-}
+func Warn(v ...interface{}) { outputHere(WARN, 1, fmt.Sprintln(v...)) }
 
-func Info(v ...interface{}) {
-	//if dailyRolling {
-	//	fileCheck()
-	//}
-	defer catchError()
-	if logObj != nil {
-		logObj.mu.RLock()
-		defer logObj.mu.RUnlock()
-	}
-	if LogLevel <= INFO {
-		if logObj != nil {
-			logObj.lg.Output(3, 2, fmt.Sprintln(v...))
-		}
-		console(3, 3, v...)
-	}
-}
-func Warn(v ...interface{}) {
-	//if dailyRolling {
-	//	fileCheck()
-	//}
-	defer catchError()
-	if logObj != nil {
-		logObj.mu.RLock()
-		defer logObj.mu.RUnlock()
-	}
+func Error(v ...interface{}) { outputHere(ERROR, 1, fmt.Sprintln(v...)) }
 
-	if LogLevel <= WARN {
-		if logObj != nil {
-			logObj.lg.Output(2, 2, fmt.Sprintln(v...))
-		}
-		console(2, 3, v...)
-	}
-}
+// Fatal 只按 FATAL 级别记录, 不退出进程。
+func Fatal(v ...interface{}) { outputHere(FATAL, 1, fmt.Sprintln(v...)) }
 
-func Error(v ...interface{}) {
-	//if dailyRolling {
-	//	fileCheck()
-	//}
-	defer catchError()
-	if logObj != nil {
-		logObj.mu.RLock()
-		defer logObj.mu.RUnlock()
-	}
-	if LogLevel <= ERROR {
-		if logObj != nil {
-			logObj.lg.Output(1, 2, fmt.Sprintln(v...))
-		}
-		console(1, 3, v...)
-	}
-}
+func FDebug(format string, v ...interface{}) { outputHere(DEBUG, 1, fmt.Sprintf(format, v...)) }
 
-func Fatal(v ...interface{}) {
-	//if dailyRolling {
-	//	fileCheck()
-	//}
-	defer catchError()
-	if logObj != nil {
-		logObj.mu.RLock()
-		defer logObj.mu.RUnlock()
-	}
-	if LogLevel <= FATAL {
-		if logObj != nil {
-			logObj.lg.Output(0, 2, fmt.Sprintln(v...))
-		}
-		console(0, 3, v...)
-	}
-}
+func FInfo(format string, v ...interface{}) { outputHere(INFO, 1, fmt.Sprintf(format, v...)) }
 
-func FDebug(format string, v ...interface{}) {
+func FWarn(format string, v ...interface{}) { outputHere(WARN, 1, fmt.Sprintf(format, v...)) }
 
-	//if dailyRolling {
-	//	fileCheck()
-	//}
-	defer catchError()
-	if logObj != nil {
-		logObj.mu.RLock()
-		defer logObj.mu.RUnlock()
-	}
+func FError(format string, v ...interface{}) { outputHere(ERROR, 1, fmt.Sprintf(format, v...)) }
 
-	if LogLevel <= DEBUG {
-		if logObj != nil {
-			logObj.lg.Output(4, 2, fmt.Sprintf(format, v...))
-		}
-		console(4, 3, fmt.Sprintf(format, v...))
-	}
-}
-
-func FInfo(format string, v ...interface{}) {
-	//if dailyRolling {
-	//	fileCheck()
-	//}
-	defer catchError()
-	if logObj != nil {
-		logObj.mu.RLock()
-		defer logObj.mu.RUnlock()
-	}
-	if LogLevel <= INFO {
-		if logObj != nil {
-			logObj.lg.Output(3, 2, fmt.Sprintf(format, v...))
-		}
-		console(3, 3, fmt.Sprintf(format, v...))
-	}
-}
-func FWarn(format string, v ...interface{}) {
-	//if dailyRolling {
-	//	fileCheck()
-	//}
-	defer catchError()
-	if logObj != nil {
-		logObj.mu.RLock()
-		defer logObj.mu.RUnlock()
-	}
-
-	if LogLevel <= WARN {
-		if logObj != nil {
-			logObj.lg.Output(2, 2, fmt.Sprintf(format, v...))
-		}
-		console(2, 3, fmt.Sprintf(format, v...))
-	}
-}
-
-func FError(format string, v ...interface{}) {
-	//if dailyRolling {
-	//	fileCheck()
-	//}
-	defer catchError()
-	if logObj != nil {
-		logObj.mu.RLock()
-		defer logObj.mu.RUnlock()
-	}
-	if LogLevel <= ERROR {
-		if logObj != nil {
-			logObj.lg.Output(1, 2, fmt.Sprintf(format, v...))
-		}
-		console(1, 3, fmt.Sprintf(format, v...))
-	}
-}
-
-func FFatal(format string, v ...interface{}) {
-	//if dailyRolling {
-	//	fileCheck()
-	//}
-	defer catchError()
-	if logObj != nil {
-		logObj.mu.RLock()
-		defer logObj.mu.RUnlock()
-	}
-	if LogLevel <= FATAL {
-		if logObj != nil {
-			logObj.lg.Output(0, 2, fmt.Sprintf(format, v...))
-		}
-		console(0, 3, fmt.Sprintf(format, v...))
-	}
-}
+// FFatal 只按 FATAL 级别记录, 不退出进程。
+func FFatal(format string, v ...interface{}) { outputHere(FATAL, 1, fmt.Sprintf(format, v...)) }
 
 func (f *_FILE) isMustRename() bool {
 
@@ -540,7 +441,6 @@ func getOneDayLogFileNum(dir, filename, date string) ([]int, error) {
 	}
 	return nums, nil
 }
-
 
 // removeMoreOldLogFile 删除 dir 下以 filename 开头的文件，保留最新的 fileCount 个文件
 func removeMoreOldLogFile(dir, filename string, fileCount int) {

@@ -241,28 +241,31 @@ func (l *Logger) formatHeader(level int, buf *[]byte, t time.Time, file string, 
 // provided for generality, although at the moment on all pre-defined
 // paths it will be 2.
 func (l *Logger) Output(level int, calldepth int, s string) error {
-    now := time.Now() // get this early.
     var file string
     var line int
-    l.mu.Lock()
-    defer l.mu.Unlock()
     if l.flag&(Lshortfile|Llongfile) != 0 {
-        // release lock while getting caller info - it's expensive.
-        l.mu.Unlock()
+        // 取调用位置比较贵, 放在加锁之外
         var ok bool
         _, file, line, ok = runtime.Caller(calldepth)
         if !ok {
             file = "???"
             line = 0
         }
-        l.mu.Lock()
     }
+    return l.OutputAt(level, file, line, s)
+}
+
+// OutputAt 输出一条日志, 调用位置由参数给出而非现场推导。
+// 供上层日志门面复用: 门面自己取一次调用位置即可, 不必让本包重复推导。
+// file 传完整路径, Lshortfile 的截短仍由 formatHeader 处理。
+func (l *Logger) OutputAt(level int, file string, line int, s string) error {
+    now := time.Now() // get this early.
+    l.mu.Lock()
+    defer l.mu.Unlock()
+
     l.buf = l.buf[:0]
     l.formatHeader(level, &l.buf, now, file, line)
 
-    //fmt.Println(s)
-    //s = string(([]byte(s))[1 : len(s)-2])
-    //fmt.Println(s)
     l.buf = append(l.buf, s...)
     if len(s) == 0 || s[len(s)-1] != '\n' {
         l.buf = append(l.buf, '\n')
